@@ -1,7 +1,6 @@
 const express = require('express');
 const bootstrap = require('./bootstrap/bootstrap');
 const app = express();
-
 try {
     bootstrap(app)
     const PORT = process.env.APP_PORT || 5000;

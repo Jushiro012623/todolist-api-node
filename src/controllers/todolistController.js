@@ -1,7 +1,8 @@
 const db = require("../models");
 const index = async (req, res) => {
   // return res.send({success:true})
-  const todolists = await db.TodoList.findAll();
+  const { userId } = req.query; 
+  const todolists = await db.TodoList.findAll({where:{userId}});
   res.status(201).json({
     success: true,
     data: todolists,
