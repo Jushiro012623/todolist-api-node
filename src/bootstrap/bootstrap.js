@@ -1,5 +1,5 @@
 const express = require('express');
-const {database} = require('../database')
+const {database} = require('../../database')
 const { todolist} = require('../routes/todolistRoutes')
 const { user } = require('../routes/userRoutes');
 
