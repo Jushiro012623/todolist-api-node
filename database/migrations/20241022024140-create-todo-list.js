@@ -1,6 +1,6 @@
 'use strict';
 /** @type {import('sequelize-cli').Migration} */
-module.exports = {
+module.exports = {  
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('TodoLists', {
       id: {
@@ -14,6 +14,10 @@ module.exports = {
       },
       description: {
         type: Sequelize.STRING
+      },
+      complete: {
+        type: Sequelize.DataTypes.BOOLEAN,
+        defaultValue: false,
       },
       createdAt: {
         allowNull: false,

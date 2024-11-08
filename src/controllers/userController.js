@@ -1,14 +1,16 @@
 const db = require("../models");
-const hashThis = require("../helpers/hashing");
-const index = async (req, res) => {
+const {hashThis} = require("../helpers/hashing");
+const internals = {}
+internals.index = async (req, res) => {
   const users = await db.User.findAll();
   res.status(201).json({
     success: true,
     data: users,
     message: "Users retrieved successfully",
   });
+  // res.render('index', { title: 'Hey', message: 'Hello there!' })
 };
-const show = async (req, res) => {
+internals.show = async (req, res) => {
   const user = await db.User.findByPk(req.params.id);
   if (user === null) return res.status(404).json({ message: "Not Found" });
   res.status(200).json({
@@ -17,7 +19,7 @@ const show = async (req, res) => {
     message: "User retrieved successfully",
   });
 };
-const create = async (req, res) => {
+internals.create = async (req, res) => {
   try {
     const { username, password, email } = req.body;
     const hashedPassword = await hashThis(password);
@@ -39,7 +41,7 @@ const create = async (req, res) => {
     });
   }
 };
-const update = async (req, res) => {
+internals.update = async (req, res) => {
   try {
     const { username, password, email } = req.body;
     const hashedPassword = await hashThis(password);
@@ -65,7 +67,7 @@ const update = async (req, res) => {
     });
   }
 };
-const remove = async (req, res) => {
+internals.remove = async (req, res) => {
   try {
     const user = await db.User.destroy({ where: { id: req.params.id } });
     if (user == 0) return res.status(404).json({ message: "Not Found" });
@@ -81,4 +83,4 @@ const remove = async (req, res) => {
     });
   }
 };
-module.exports = { index, show, create, update, remove };
+module.exports = internals

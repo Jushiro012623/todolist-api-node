@@ -1,7 +1,6 @@
-
 const bcrypt = require("bcrypt");
-const hashThis = (hash) => {
-    bcrypt.hash(hash, 10);
+const hashThis = async (hash) => {
+    return bcrypt.hash(hash, 10);
 }
 
-module.exports = hashThis
+module.exports = {hashThis}

@@ -1,7 +1,8 @@
 const db = require("../models");
-const index = async (req, res) => {
+const internals = {}
+internals.index = async (req, res) => {
   // return res.send({success:true})
-  const { userId } = req.query; 
+  const userId = req.user.id
   const todolists = await db.TodoList.findAll({where:{userId}});
   res.status(201).json({
     success: true,
@@ -9,7 +10,7 @@ const index = async (req, res) => {
     message: "Todolist retrieved successfully",
   });
 };
-const show = async (req, res) => {
+internals.show = async (req, res) => {
   const todolist = await db.TodoList.findByPk(req.params.id);
   if (todolist === null) return res.status(404).json({ message: "Not Found" });
   // console.log(todolist instanceof db.TodoList); // true
@@ -19,9 +20,14 @@ const show = async (req, res) => {
     message: "Todolist retrieved successfully",
   });
 };
-const create = async (req, res) => {
+internals.create = async (req, res) => {
+  const user = req.user
+  // return res.json({re:user.id})
   try {
-    const todolist = await db.TodoList.create(req.body);
+    const todolist = await db.TodoList.create({
+      ...req.body,
+       userId : user.id
+    });
     res.status(201).json({
       success: true,
       data: todolist,
@@ -35,15 +41,17 @@ const create = async (req, res) => {
     });
   }
 };
-const update = async (req, res) => {
+internals.update = async (req, res) => {
   try {
-    const todolist = await db.TodoList.update(req.body, {
+    console.log(req.body);
+    const todolist = await db.TodoList.update(req.body,{
       where: { id: req.params.id },
     });
     if (todolist == 0) return res.status(404).json({ message: "Not Found" });
     res.status(200).json({
       success: true,
       data: todolist,
+      complete: todolist.complete,
       message: "Todolist updated successfully",
     });
   } catch (error) {
@@ -54,7 +62,7 @@ const update = async (req, res) => {
     });
   }
 };
-const remove = async (req, res) => {
+internals.remove = async (req, res) => {
   try {
     const todolist = await db.TodoList.destroy({
       where: { id: req.params.id },
@@ -73,4 +81,4 @@ const remove = async (req, res) => {
   }
 };
 
-module.exports = { index, show, create, update, remove };
+module.exports = internals
